@@ -5,31 +5,38 @@ class lettergram:
 
         self.stack = []
         self.f = open(file,'r')
-        self.d = self.f.read().splitlines()
+
+    def gen_dict(self,a):
+        d = []
+        for line in self.f:
+            if len(line) == len(a)+1:
+                d.append(line.strip())
+        return d
 
     def solve(self,a,b):
+
+        self.d = self.gen_dict(a)
+        #print(self.d)
+
         steps = 0
         out = a
-        if a > b:
-            smallest = b
-        else:
-            smallest = a
+        changed=False
 
-        changed = False
+        if len(a) != len(b):
+            return -1
 
         print(a)
 
         while (out != b):
-            for i in range(len(smallest)):
+            for i in range(len(a)):
                 if out[i] != b[i]:
                     temp = out
-                    if i < len(smallest) - 1:
+                    if i < len(a) - 1:
                         out = out[:i] + b[i] + out[i + 1:]
                     else:
                         out = out[:i] + b[i]
 
                     if out not in self.d:
-                        sys.stdout.write("Attempted "+str(out)+"\n")
                         out = temp
                     else:
                         changed = True
