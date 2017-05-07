@@ -33,8 +33,10 @@ class lettergram:
                     temp = out
                     if i < len(a) - 1:
                         out = out[:i] + b[i] + out[i + 1:]
+                        #print(out)
                     else:
                         out = out[:i] + b[i]
+                        #print(out)
 
                     if out not in self.d:
                         out = temp
