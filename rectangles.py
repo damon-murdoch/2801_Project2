@@ -46,9 +46,38 @@ wsize=360
 
 root = Tk()
 view = window(root)
-#r = make_rect()
-r1 = rect(5,5,255,5,255,255,5,255)
-r2 = rect(25,25,275,25,275,275,25,275)
+
+def genrect():
+    w=random.randint(0,256)
+    h=random.randint(0,256)
+    x=random.randint(0,256)
+    y = random.randint(0, 256)
+    angle=random.randint(0,360)
+
+    # Top Left
+    x1=
+    y1=
+
+    # Top Right
+    x2=
+    y2=
+
+    # Bottom Left
+    x3=
+    y3=
+
+    # Bottom Right
+    x4=
+    y4=
+
+    r = rect(p[0],p[1],p[2],p[3],p[4],p[5],p[6],p[7])
+    return r
+
+#r1 = rect(5,5,255,5,255,255,5,255)
+#r2 = rect(25,25,275,25,275,275,25,275)
+
+r1=genrect()
+r2=genrect()
 
 view.print_rect(r1,r2)
 #root.geometry("512x512+512+512")
