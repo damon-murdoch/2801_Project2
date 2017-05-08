@@ -9,14 +9,14 @@ class lettergram:
     def gen_dict(self,a):
         d = []
         for line in self.f:
-            if len(line) == len(a)+1:
-                d.append(line.strip())
+            line=line.rstrip()
+            if len(line) == len(a):
+                d.append(line)
         return d
 
     def solve(self,a,b):
 
         self.d = self.gen_dict(a)
-        #print(self.d)
 
         steps = 0
         out = a
@@ -32,11 +32,10 @@ class lettergram:
                 if out[i] != b[i]:
                     temp = out
                     if i < len(a) - 1:
+
                         out = out[:i] + b[i] + out[i + 1:]
-                        #print(out)
                     else:
                         out = out[:i] + b[i]
-                        #print(out)
 
                     if out not in self.d:
                         out = temp
