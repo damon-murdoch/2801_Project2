@@ -1,12 +1,15 @@
 import sys
 
 class lettergram:
-    def __init__(self,file):
 
+    def __init__(self,file):
         self.stack = []
+        self.steps=0
+        self.sidwaysmoves=0
         self.f = open(file,'r')
 
     def gen_dict(self,a):
+
         d = []
         for line in self.f:
             line=line.rstrip()
@@ -14,46 +17,71 @@ class lettergram:
                 d.append(line)
         return d
 
-    def solve(self,a,b):
+    def SameChars(self,a,b,c):
 
-        self.d = self.gen_dict(a)
-
-        steps = 0
-        out = a
-        changed=False
-
+        aas=0
+        bbs=0
         if len(a) != len(b):
             return -1
+        for i in range(len(a)):
+            if a[i] == c[i]:
+                aas+=1
+                pass
+            elif  b[i]== c[i]:
+                bbs+=1
+                pass
+        return (aas,bbs)
 
-        print(a)
+    def start(self,a,b):
 
-        while (out != b):
-            for i in range(len(a)):
-                if out[i] != b[i]:
-                    temp = out
-                    if i < len(a) - 1:
+        self.steps=0
+        self.stack=[]
+        self.sidwaysmoves = 0
+        self.d = self.gen_dict(a)
+        out = self.recursionsolve(a,b,0,0)
+        return out
 
-                        out = out[:i] + b[i] + out[i + 1:]
-                    else:
-                        out = out[:i] + b[i]
+    def recursionsolve(self,a,b,repeats,found):
 
-                    if out not in self.d:
-                        out = temp
-                    else:
-                        changed = True
-                        print(out)
-                        steps += 1
-            if changed == False:
+        out = a
+        self.steps+=1
+        if len(a) != len(b) or a not in self.d or b not in self.d:
+            return -1
+        h=0
+        if a == b:
+            print(self.stack)
+            return 1
+        for i in range(len(a)):
+            if a[i]==b[i]:
+                h+=1
+            pass
+        s = []
+        for i in range(len(self.d)):
+            sc = self.SameChars(a,b,self.d[i])
+            if sc[0] == 3:
+                if sc[1] == 1:
+                    s.append(self.d[i])
+                pass
+        print("S",s)
+        print("H",self.stack)
+        if len(s) > repeats:
+            out = s[repeats]
+            self.stack.append(out)
+            self.recursionsolve(out,b,0,found+1)
+        else:
+            if len(self.stack) > 0:
+                self.recursionsolve(self.stack.pop(),b,repeats+1,found-1)
+            else:
                 return -1
-            changed=False
-        return steps
 
 # Run-time Variables
 l = lettergram('dictionary.txt')
-a = input("Enter Starting word: ")
-b = input("Enter finishing word:")
-s=l.solve(a,b)
-if s > -1:
-    sys.stdout.write("Conversion performed! Steps: "+str(s)+"\n")
+a = input("Enter Starting word: ").lower()
+b = input("Enter finishing word:").lower()
+print(a,b)
+s=l.start(a,b)
+print(s)
+if s != -1:
+    sys.stdout.write("Conversion performed! Steps: "+str(l.steps)+"\n")
 else:
     print("Conversion failed.")
