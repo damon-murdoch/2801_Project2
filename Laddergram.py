@@ -56,12 +56,15 @@ class lettergram:
                 h+=1
             pass
         s = []
+        b = []
         for i in range(len(self.d)):
             sc = self.SameChars(a,b,self.d[i])
             if sc[0] == 3:
                 if sc[1] == 1:
                     s.append(self.d[i])
-                pass
+                # Not an optimal move
+                else:
+                    b.append(self.d[i])
         print("S",s)
         print("H",self.stack)
         if len(s) > repeats:
@@ -69,11 +72,13 @@ class lettergram:
             self.stack.append(out)
             self.recursionsolve(out,b,0,found+1)
         else:
+            self.recursionsolve(out, b, 0, found + 1)
+            '''
             if len(self.stack) > 0:
                 self.recursionsolve(self.stack.pop(),b,repeats+1,found-1)
             else:
                 return -1
-
+            '''
 # Run-time Variables
 l = lettergram('dictionary.txt')
 a = input("Enter Starting word: ").lower()
