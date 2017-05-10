@@ -1,12 +1,11 @@
 import sys
 
-class lettergram:
+class Laddergram:
 
     def __init__(self,file):
         self.stack = []
         self.visited = []
         self.steps=0
-        self.sidwaysmoves=0
         self.f = open(file,'r')
 
     def gen_dict(self,a):
@@ -18,19 +17,13 @@ class lettergram:
                 d.append(line)
         return d
 
-    def SameChars(self,a,b,c):
-
-        aas=0
-        bbs=0
-        #print(len(a),len(b),len(c))
+    def same_chars(self,a,c):
+        ac=0
         for i in range(len(a)):
             if a[i] == c[i]:
-                aas+=1
+                ac+=1
                 pass
-            elif  b[i]== c[i]:
-                bbs+=1
-                pass
-        return aas,bbs
+        return ac
 
     def start(self,a,b):
 
@@ -39,62 +32,71 @@ class lettergram:
         self.visited=[]
         self.sidwaysmoves = 0
         self.d = self.gen_dict(a)
-        out = self.recursionsolve(a,b,0)
+        out = self.solve(a,b)
         return out
 
-    def recursionsolve(self,a,b,repeats):
+    def get_heuristic(self,a,b):
+        h=0
+        if not (len(a)==len(b)):
+            return -1
+        for i in range(len(a)):
+            if a[i]==b[i]:
+                h+=1
+        return h
+
+    def solve(self,a,b):
 
         out = a
         self.steps+=1
+        #print(a,b)
+        lock = []
+        add=True
+        for i in range(len(a)):
+            lock.append(a[i]==b[i])
+        #print(lock)
         if len(a) != len(b) or a not in self.d or b not in self.d:
+            print("Invalid inputs!")
             return -1
+
         if a == b:
-            #print(self.stack)
-            return 1
+            return self.stack
+
         s = []
-        x = []
 
         # Populate S
         for i in range(len(self.d)):
-            sc = self.SameChars(a,b,self.d[i])
-            #print(sc)
-            if sc[0] == 3:
-                if sc[1] == 1:
-                    s.append(self.d[i])
-                # Not an optimal move
-                else:
-                    x.append(self.d[i])
+            if self.d[i] not in self.visited and self.same_chars(a,self.d[i])==len(a)-1:
+                for j in range(len(self.d[i])):
+                    if self.d[i][j]!=a[j] and lock[j] == True:
+                        add=False
+                if add==True:
+                    s.append((self.d[i],self.get_heuristic(b,self.d[i])))
+                add=True
 
-        print("Options",s)
-        print("Stack",self.stack)
-        print("Visited",self.visited)
+        s.sort(key=lambda tup: tup[1], reverse=True)
+
         if len(s) > repeats:
             out = s[repeats]
-            self.stack.append(out)
-            self.recursionsolve(out,b,0)
-        else:
-            if len(x) > repeats:
-                if x[repeats] not in self.visited:
-                    out = x[repeats]
-                    self.stack.append(out)
-                    self.visited.append(out)
-                    self.recursionsolve(out,b,0)
-                else:
-                    self.recursionsolve(out,b,repeats+1)
+            self.stack.append(out[0])
+            self.visited.append(out[0])
+            self.solve(out[0],b)
 
-            elif len(self.stack) > 0:
-                self.recursionsolve(self.stack.pop(),b,repeats+1)
-            else:
-                return -1
+        elif len(self.stack) > 0:
+            self.solve(self.stack.pop(),b)
+        else:
+            return -1
 
 # Run-time Variables
-l = lettergram('dictionary.txt')
+l = Laddergram('dictionary.txt')
 a = input("Enter Starting word: ").lower().rstrip()
 b = input("Enter finishing word:").lower().rstrip()
-print(a,b)
+
 s=l.start(a,b)
-print(s)
-if s != -1:
-    sys.stdout.write("Conversion performed! Steps: "+str(l.steps)+"\n")
+if b in l.stack:
+    print("Solution found!")
 else:
-    print("Conversion failed.")
+    print("Solution not reached.")
+
+for i in l.stack:
+    print(i.title())
+print("Changes: "+str(len(l.stack)))
