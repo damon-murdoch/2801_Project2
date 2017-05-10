@@ -1,6 +1,6 @@
 import sys
 
-class lettergram:
+class Laddergram:
 
     def __init__(self,file):
         self.stack = []
@@ -87,7 +87,7 @@ class lettergram:
             return -1
 
 # Run-time Variables
-l = lettergram('dictionary.txt')
+l = Laddergram('dictionary.txt')
 a = input("Enter Starting word: ").lower().rstrip()
 b = input("Enter finishing word:").lower().rstrip()
 
