@@ -1,12 +1,11 @@
 import sys
 
-class lettergram:
+class Laddergram:
 
     def __init__(self,file):
         self.stack = []
         self.visited = []
         self.steps=0
-        self.sidwaysmoves=0
         self.f = open(file,'r')
 
     def gen_dict(self,a):
@@ -33,7 +32,7 @@ class lettergram:
         self.visited=[]
         self.sidwaysmoves = 0
         self.d = self.gen_dict(a)
-        out = self.solve(a,b,0)
+        out = self.solve(a,b)
         return out
 
     def get_heuristic(self,a,b):
@@ -45,7 +44,7 @@ class lettergram:
                 h+=1
         return h
 
-    def solve(self,a,b,repeats):
+    def solve(self,a,b):
 
         out = a
         self.steps+=1
@@ -80,15 +79,15 @@ class lettergram:
             out = s[repeats]
             self.stack.append(out[0])
             self.visited.append(out[0])
-            self.solve(out[0],b,0)
+            self.solve(out[0],b)
 
         elif len(self.stack) > 0:
-            self.solve(self.stack.pop(),b,repeats+1)
+            self.solve(self.stack.pop(),b)
         else:
             return -1
 
 # Run-time Variables
-l = lettergram('dictionary.txt')
+l = Laddergram('dictionary.txt')
 a = input("Enter Starting word: ").lower().rstrip()
 b = input("Enter finishing word:").lower().rstrip()
 
